@@ -9,20 +9,21 @@ public class Test {
 
         AbstractFileReader file = factory.fileReader();
 
+        /*
         file.readFile().forEach(System.out::println);
 
-        /*
         factory = new JSONFactory();
 
         file = factory.fileReader();
 
         file.readFile().forEach(System.out::println);
+        */
 
         factory = new TXTFactory();
 
         file = factory.fileReader();
 
         file.readFile().forEach(System.out::println);
-        */
+
     }
 }

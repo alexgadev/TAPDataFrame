@@ -11,7 +11,7 @@ public class TXTFileReader implements AbstractFileReader{
         scanner.nextLine();
         while (scanner.hasNext()){
             String str = scanner.nextLine();
-            str = str.replaceAll(" ", "");
+            str = str.replaceAll("\"", "");
             String[] parts = str.split(",");
 
             City c = new City(parts);

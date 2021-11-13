@@ -11,6 +11,7 @@ public class CSVFileReader implements AbstractFileReader{
         sc.nextLine(); // avoid cell names
         while (sc.hasNext()) {
             String str = sc.nextLine();
+            str = str.replaceAll("\"", "");
             str = str.replaceAll("\\s", "");
             String[] part = str.split(",");
 
