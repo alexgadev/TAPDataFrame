@@ -1,11 +1,14 @@
+package factory;
+
 //Abstract Product
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 public interface AbstractFileReader {
 
-    public List<City> readFile() throws FileNotFoundException, IOException;
+    public  Map<String, List<String>> readFile() throws FileNotFoundException, IOException;
 
 }
