@@ -12,8 +12,10 @@ public class CSVFileReader implements AbstractFileReader{
 
         String str = sc.nextLine();
         String[] keys = str.split(",");
-        for (int i = 0; i < keys.length; i++)
+        for (int i = 0; i < keys.length; i++){
             keys[i] = keys[i].replaceAll("\"", "");
+            keys[i] = keys[i].replaceAll("\\s", "");
+        }
 
         while(sc.hasNext()){
             str = sc.nextLine();
