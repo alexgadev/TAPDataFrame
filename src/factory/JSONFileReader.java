@@ -5,12 +5,12 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 import com.google.gson.*;
 
-public class JSONFileReader implements AbstractFileReader{
+public class JSONFileReader<T> implements AbstractFileReader<T>{
 
     @Override
-     public Map<String, List<String>> readFile() throws IOException {
+     public Map<String, List<T>> readFile() throws IOException {
 
-        Map<String, List<String>> dataframe = new LinkedHashMap<>();
+        Map<String, List<T>> dataframe = new LinkedHashMap<>();
 
         InputStream is = new FileInputStream("cities.json");
         Reader r = new InputStreamReader(is, StandardCharsets.UTF_8);
@@ -34,7 +34,7 @@ public class JSONFileReader implements AbstractFileReader{
            for(int i = 0; i < obj.length; i++){
                String[] strings = obj[i].split(":");
                dataframe.putIfAbsent(strings[0], new LinkedList<>());
-               dataframe.get(strings[0]).add(strings[1]);
+               dataframe.get(strings[0]).add((T) strings[1]);
            }
         }
 

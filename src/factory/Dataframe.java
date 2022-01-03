@@ -5,16 +5,16 @@ import java.util.*;
 import java.util.function.Predicate;
 
 
-public class Dataframe {
-    private Map<String, List<String>> dataframe;
+public class Dataframe<T extends Comparable<T>> {
+    private Map<String, List<T>> dataframe;
 
     /**
      * Dataframe object constructor
      *
      * @param reader -> factory type
-     * @throws IOException
+     * @throws IOException - I/O Exception
      */
-    public Dataframe(AbstractFileReaderFactory reader) throws IOException {
+    public Dataframe(AbstractFileReaderFactory<T> reader) throws IOException {
         dataframe = reader.fileReader().readFile();
     }
 
@@ -26,7 +26,7 @@ public class Dataframe {
      * @return the value of a single item (row) and colum label (name)
      */
     public String at(int row, String name){
-        return dataframe.get(name).get(row);
+        return (String) dataframe.get(name).get(row);
     }
 
     /**
@@ -38,10 +38,10 @@ public class Dataframe {
      */
     public String iat(int row, int col){
         int i = 0;
-        for(Map.Entry<String, List<String>> entry : dataframe.entrySet()){
+        for(Map.Entry<String, List<T>> entry : dataframe.entrySet()){
             String key = entry.getKey();
             if(i == col){
-                return dataframe.get(key).get(row);
+                return (String) dataframe.get(key).get(row);
             }
             i++;
         }
@@ -64,9 +64,9 @@ public class Dataframe {
      */
     public int size(){
         int i = 0;
-        for(Map.Entry<String, List<String>> entry : dataframe.entrySet()) {
-            List<String> value = entry.getValue();
-            for (String val : entry.getValue())
+        for(Map.Entry<String, List<T>> entry : dataframe.entrySet()) {
+            List<T> value = entry.getValue();
+            for (T val : entry.getValue())
                 i++;
             return i;
         }
@@ -80,27 +80,54 @@ public class Dataframe {
      * @param comparator - sorting desired
      * @return the values of a column in the DataFrame following a certain order
      */
-    public List<String> sort(String name, Comparator<String> comparator){
-        List<String> list = dataframe.get(name);
+    public List<T> sort(String name, Comparator<T> comparator){
+        List<T> list = dataframe.get(name);
         list.sort(comparator);
         return list;
     }
 
+    public final Comparator<T> intAscending = new Comparator<T>() {
+        @Override
+        public int compare(T o1, T o2) {
+            int n = Integer.parseInt((String) o1);
+            int m = Integer.parseInt((String) o2);
+            return Integer.compare(n, m);
+        }
+    };
 
-    public Map<String, List<String>> query(Predicate<String> f){
+    public final Comparator<T> intDescending = new Comparator<T>() {
+        @Override
+        public int compare(T o1, T o2) {
+            int n = Integer.parseInt((String) o1);
+            int m = Integer.parseInt((String) o2);
+            return -(Integer.compare(n, m));
+        }
+    };
+
+
+
+    public Map<String, List<String>> query(String str, Predicate<T> f){
         Map<String, List<String>> df = new LinkedHashMap<>();
-        for(Map.Entry<String, List<String>> entry : dataframe.entrySet()) {
+        for(Map.Entry<String, List<T>> entry : dataframe.entrySet()) {
             df.putIfAbsent(entry.getKey(), new LinkedList<>());
-            List<String> value = entry.getValue();
-            for (String val : entry.getValue())
+            List<T> value = entry.getValue();
+            for (T val : entry.getValue())
                 if (f.test(val))
-                    df.get(entry.getKey()).add(val);
+                    df.get(entry.getKey()).add((String) val);
         }
         return df;
     }
 
+    /*
     public Iterator<Map.Entry<String, List<String>>> iterator(){
         return dataframe.entrySet().iterator();
     }
+    */
+
+    public String toString(){
+        dataframe.forEach((k, v) -> System.out.println("Key: " + k + ", Value: " +v));
+        return null;
+    }
+
 
 }

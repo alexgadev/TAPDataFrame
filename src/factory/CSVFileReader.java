@@ -3,11 +3,12 @@ package factory;
 import java.io.*;
 import java.util.*;
 
-public class CSVFileReader implements AbstractFileReader{
+public class CSVFileReader<T> implements AbstractFileReader<T>{
 
     @Override
-    public  Map<String, List<String>> readFile() throws FileNotFoundException {
-        Map<String, List<String>> dataframe = new LinkedHashMap<>();
+    @SuppressWarnings("unchecked")
+    public  Map<String, List<T>> readFile() throws FileNotFoundException {
+        Map<String, List<T>> dataframe = new LinkedHashMap<>();
         Scanner sc = new Scanner(new File("cities.csv"));
 
         String str = sc.nextLine();
@@ -24,7 +25,7 @@ public class CSVFileReader implements AbstractFileReader{
             String[] values = str.split(",");
             for (int i = 0; i < values.length; i++) {
                 dataframe.putIfAbsent(keys[i], new LinkedList<>());
-                dataframe.get(keys[i]).add(values[i]);
+                dataframe.get(keys[i]).add((T) values[i]);
             }
         }
         sc.close();

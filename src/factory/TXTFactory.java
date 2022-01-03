@@ -1,7 +1,7 @@
 package factory;
 
-public class TXTFactory implements AbstractFileReaderFactory{
+public class TXTFactory<T> implements AbstractFileReaderFactory<T>{
 
-    public AbstractFileReader fileReader(){ return new TXTFileReader(); }
+    public AbstractFileReader<T> fileReader(){ return new TXTFileReader<T>(); }
 
 }

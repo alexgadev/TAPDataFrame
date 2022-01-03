@@ -1,7 +1,7 @@
 package factory;
 
-public interface AbstractFileReaderFactory {
+public interface AbstractFileReaderFactory<T> {
 
-    public abstract AbstractFileReader fileReader();
+    public abstract AbstractFileReader<T> fileReader();
 
 }
