@@ -2,6 +2,7 @@ package factory;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.function.Predicate;
 
 
 public class Dataframe {
@@ -85,9 +86,17 @@ public class Dataframe {
         return list;
     }
 
-    public Map<String, List<String>> query(){
 
-        return null;
+    public Map<String, List<String>> query(Predicate<String> f){
+        Map<String, List<String>> df = new LinkedHashMap<>();
+        for(Map.Entry<String, List<String>> entry : dataframe.entrySet()) {
+            df.putIfAbsent(entry.getKey(), new LinkedList<>());
+            List<String> value = entry.getValue();
+            for (String val : entry.getValue())
+                if (f.test(val))
+                    df.get(entry.getKey()).add(val);
+        }
+        return df;
     }
 
     public Iterator<Map.Entry<String, List<String>>> iterator(){
