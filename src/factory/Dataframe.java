@@ -5,7 +5,7 @@ import java.util.*;
 import java.util.function.Predicate;
 
 
-public class Dataframe<T extends Comparable<T>> {
+public class Dataframe<T> {
     private Map<String, List<T>> dataframe;
 
     /**
@@ -23,7 +23,7 @@ public class Dataframe<T extends Comparable<T>> {
      *
      * @param row - row number
      * @param name - column label
-     * @return the value of a single item (row) and colum label (name)
+     * @return the value of a single item (row) and column label (name)
      */
     public String at(int row, String name){
         return (String) dataframe.get(name).get(row);
@@ -106,23 +106,49 @@ public class Dataframe<T extends Comparable<T>> {
 
 
 
-    public Map<String, List<String>> query(String str, Predicate<T> f){
-        Map<String, List<String>> df = new LinkedHashMap<>();
+    public Map<String, List<T>> query(String str, Predicate<T> f){
+        Map<String, List<T>> df = new LinkedHashMap<>();
+        List<T> values = dataframe.get(str);
+
+        int i = 0, cont = 0;
+        List<Integer> arr = new ArrayList<>();
+        for (T value : values){
+            if (f.test(value)) {
+                arr.add(cont);
+                i++;
+            }
+            cont++;
+        }
+
         for(Map.Entry<String, List<T>> entry : dataframe.entrySet()) {
             df.putIfAbsent(entry.getKey(), new LinkedList<>());
-            List<T> value = entry.getValue();
-            for (T val : entry.getValue())
-                if (f.test(val))
-                    df.get(entry.getKey()).add((String) val);
+            i = 0; cont = 0;
+            for(T val : entry.getValue()){
+                /*if (f.test(val)) {
+                    df.get(entry.getKey()).add(val);
+                }
+                 */
+                try {
+                    if (arr.get(i).equals(cont)) {
+                        df.get(entry.getKey()).add(val);
+                        i++;
+                    }
+                    cont++;
+                }
+                catch (IndexOutOfBoundsException e){
+                    break;
+                }
+            }
         }
+
         return df;
     }
 
-    /*
-    public Iterator<Map.Entry<String, List<String>>> iterator(){
+
+    public Iterator<Map.Entry<String, List<T>>> iterator(){
         return dataframe.entrySet().iterator();
     }
-    */
+
 
     public String toString(){
         dataframe.forEach((k, v) -> System.out.println("Key: " + k + ", Value: " +v));
