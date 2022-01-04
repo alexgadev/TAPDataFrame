@@ -65,7 +65,6 @@ public class Dataframe<T> {
     public int size(){
         int i = 0;
         for(Map.Entry<String, List<T>> entry : dataframe.entrySet()) {
-            List<T> value = entry.getValue();
             for (T val : entry.getValue())
                 i++;
             return i;
@@ -86,48 +85,30 @@ public class Dataframe<T> {
         return list;
     }
 
-    public final Comparator<T> intAscending = new Comparator<T>() {
-        @Override
-        public int compare(T o1, T o2) {
-            int n = Integer.parseInt((String) o1);
-            int m = Integer.parseInt((String) o2);
-            return Integer.compare(n, m);
-        }
-    };
-
-    public final Comparator<T> intDescending = new Comparator<T>() {
-        @Override
-        public int compare(T o1, T o2) {
-            int n = Integer.parseInt((String) o1);
-            int m = Integer.parseInt((String) o2);
-            return -(Integer.compare(n, m));
-        }
-    };
-
-
-
+    /**
+     * query: return all elements where a label value fulfills a certain condition
+     *
+     * @param str - name of a column
+     * @param f - condition on which filter elements
+     * @return a Map<String, List<T>> with all elements that fulfill the conition
+     */
     public Map<String, List<T>> query(String str, Predicate<T> f){
         Map<String, List<T>> df = new LinkedHashMap<>();
         List<T> values = dataframe.get(str);
 
-        int i = 0, cont = 0;
+        int cont = 0;
         List<Integer> arr = new ArrayList<>();
         for (T value : values){
             if (f.test(value)) {
                 arr.add(cont);
-                i++;
             }
             cont++;
         }
 
         for(Map.Entry<String, List<T>> entry : dataframe.entrySet()) {
             df.putIfAbsent(entry.getKey(), new LinkedList<>());
-            i = 0; cont = 0;
+            int i = 0; cont = 0;
             for(T val : entry.getValue()){
-                /*if (f.test(val)) {
-                    df.get(entry.getKey()).add(val);
-                }
-                 */
                 try {
                     if (arr.get(i).equals(cont)) {
                         df.get(entry.getKey()).add(val);
@@ -140,18 +121,21 @@ public class Dataframe<T> {
                 }
             }
         }
-
         return df;
     }
 
-
+    /**
+     * Makes the DataFrame object Iterable
+     *
+     * @return the dataframe object iterator
+     */
     public Iterator<Map.Entry<String, List<T>>> iterator(){
         return dataframe.entrySet().iterator();
     }
 
 
     public String toString(){
-        dataframe.forEach((k, v) -> System.out.println("Key: " + k + ", Value: " +v));
+        dataframe.forEach((k, v) -> System.out.println(k + ": " + v));
         return null;
     }
 
