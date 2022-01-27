@@ -7,6 +7,6 @@ import java.util.*;
 
 public interface AbstractFileReader {
 
-    public <T> Map<String, List<T>> readFile() throws IOException;
+    public <T> Map<String, List<T>> readFile(String pathname) throws IOException;
 
 }

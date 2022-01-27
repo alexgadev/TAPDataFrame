@@ -14,8 +14,8 @@ public class Dataframe<T> implements Iterator<String>{
      * @param reader -> factory type
      * @throws IOException - I/O Exception
      */
-    public Dataframe(AbstractFileReaderFactory reader) throws IOException {
-        dataframe = reader.fileReader().readFile();
+    public Dataframe(AbstractFileReaderFactory reader, String pathname) throws IOException {
+        dataframe = reader.fileReader().readFile(pathname);
     }
 
     /**

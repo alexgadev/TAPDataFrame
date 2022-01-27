@@ -7,9 +7,9 @@ public class CSVFileReader implements AbstractFileReader{
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> Map<String, List<T>> readFile() throws FileNotFoundException {
+    public <T> Map<String, List<T>> readFile(String pathname) throws FileNotFoundException {
         Map<String, List<T>> dataframe = new LinkedHashMap<>();
-        Scanner sc = new Scanner(new File("cities.csv"));
+        Scanner sc = new Scanner(new File(pathname));
 
         String str = sc.nextLine();     // get first line
 

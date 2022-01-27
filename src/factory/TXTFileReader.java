@@ -7,9 +7,9 @@ public class TXTFileReader implements AbstractFileReader{
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> Map<String, List<T>> readFile() throws IOException {
+    public <T> Map<String, List<T>> readFile(String pathname) throws IOException {
         Map<String, List<T>> dataframe = new LinkedHashMap<>();
-        Scanner sc = new Scanner(new File("cities.txt"));
+        Scanner sc = new Scanner(new File(pathname));
 
         String str = sc.nextLine();
 

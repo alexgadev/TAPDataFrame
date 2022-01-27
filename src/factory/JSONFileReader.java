@@ -9,10 +9,10 @@ public class JSONFileReader implements AbstractFileReader{
 
     @Override
     @SuppressWarnings("unchecked")
-     public <T> Map<String, List<T>> readFile() throws IOException {
+     public <T> Map<String, List<T>> readFile(String pathname) throws IOException {
         Map<String, List<T>> dataframe = new LinkedHashMap<>();
 
-        InputStream is = new FileInputStream("cities.json");
+        InputStream is = new FileInputStream(pathname);
         Reader reader = new InputStreamReader(is, StandardCharsets.UTF_8);
         JsonStreamParser parser = new JsonStreamParser(reader);
 

@@ -7,7 +7,7 @@ import java.util.function.Predicate;
 public class Test {
     @SuppressWarnings("unchecked")
     public static <T> void main(String[] args) throws IOException {
-        Dataframe<T> df = new Dataframe(new JSONFactory());
+        Dataframe<T> df = new Dataframe(new CSVFactory(), "cities.csv");
 
         //System.out.println(df);
         Comparator<T> intAscending = (o1, o2) -> {
