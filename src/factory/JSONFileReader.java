@@ -5,37 +5,44 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 import com.google.gson.*;
 
-public class JSONFileReader<T> implements AbstractFileReader<T>{
+public class JSONFileReader implements AbstractFileReader{
 
     @Override
-     public Map<String, List<T>> readFile() throws IOException {
-
+    @SuppressWarnings("unchecked")
+     public <T> Map<String, List<T>> readFile() throws IOException {
         Map<String, List<T>> dataframe = new LinkedHashMap<>();
 
         InputStream is = new FileInputStream("cities.json");
-        Reader r = new InputStreamReader(is, StandardCharsets.UTF_8);
-        JsonStreamParser p = new JsonStreamParser(r);
+        Reader reader = new InputStreamReader(is, StandardCharsets.UTF_8);
+        JsonStreamParser parser = new JsonStreamParser(reader);
 
-        ArrayList<String> list = new ArrayList<String>();
-        JsonElement e = p.next();
-        JsonArray jarr = e.getAsJsonArray();
+        JsonElement elem = parser.next();
+        JsonArray jarr = elem.getAsJsonArray();
 
-        int len = jarr.size();
-        for (int i = 0; i < len; i++) {
-           String str = jarr.get(i).toString();
-           str = str.replaceAll("\"", "");
-           str = str.replaceAll("\\{", "");
-           str = str.replaceAll("}", "");
-           list.add(str);
+        ArrayList<String> list = new ArrayList<>();
+
+        /*
+         add to 'list' every object removing unnecessary characters
+        */
+        for (int i = 0; i < jarr.size(); i++) {
+            String str = jarr.get(i).toString();
+            str = str.replaceAll("\"", "");
+            str = str.replaceAll("\\{", "");
+            str = str.replaceAll("}", "");
+            list.add(str);
         }
 
+        /*
+         main loop: gets each object (a row) into 'obj' as separated values
+         then divide values into 's' and separate each key from its value
+        */
         for (String val : list){
            String[] obj = val.split(",");
-           for(int i = 0; i < obj.length; i++){
-               String[] strings = obj[i].split(":");
-               dataframe.putIfAbsent(strings[0], new LinkedList<>());
-               dataframe.get(strings[0]).add((T) strings[1]);
-           }
+            for (String s : obj) {
+                String[] strings = s.split(":");
+                dataframe.putIfAbsent(strings[0], new LinkedList<>());
+                dataframe.get(strings[0]).add((T) strings[1]);
+            }
         }
 
         return dataframe;

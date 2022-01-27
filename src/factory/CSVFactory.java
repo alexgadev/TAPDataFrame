@@ -1,7 +1,7 @@
 package factory;
 
-public class CSVFactory<T> implements AbstractFileReaderFactory<T>{
+public class CSVFactory implements AbstractFileReaderFactory{
 
-    public AbstractFileReader<T> fileReader() { return new CSVFileReader<T>(); }
+    public AbstractFileReader fileReader() { return new CSVFileReader(); }
 
 }

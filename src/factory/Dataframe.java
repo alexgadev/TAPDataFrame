@@ -5,28 +5,28 @@ import java.util.*;
 import java.util.function.Predicate;
 
 
-public class Dataframe<T> {
+public class Dataframe<T> implements Iterator<String>{
     private Map<String, List<T>> dataframe;
 
     /**
-     * Dataframe object constructor
+     * factory.Dataframe object constructor
      *
      * @param reader -> factory type
      * @throws IOException - I/O Exception
      */
-    public Dataframe(AbstractFileReaderFactory<T> reader) throws IOException {
+    public Dataframe(AbstractFileReaderFactory reader) throws IOException {
         dataframe = reader.fileReader().readFile();
     }
 
     /**
      * at: search the value of a cell from a row and a column label
      *
-     * @param row - row number
      * @param name - column label
+     * @param row - row number
      * @return the value of a single item (row) and column label (name)
      */
-    public String at(int row, String name){
-        return (String) dataframe.get(name).get(row);
+    public T at(String name, int row){
+        return dataframe.get(name).get(row);
     }
 
     /**
@@ -36,12 +36,12 @@ public class Dataframe<T> {
      * @param col - col number
      * @return access a single value for a row and column by integer position
      */
-    public String iat(int row, int col){
+    public T iat(int row, int col){
         int i = 0;
         for(Map.Entry<String, List<T>> entry : dataframe.entrySet()){
             String key = entry.getKey();
             if(i == col){
-                return (String) dataframe.get(key).get(row);
+                return dataframe.get(key).get(row);
             }
             i++;
         }
@@ -60,7 +60,7 @@ public class Dataframe<T> {
     /**
      * size: number of rows
      *
-     * @return number of items (rows) or 0 if there isn't any rows
+     * @return number of items (rows) or 0 if there are no rows
      */
     public int size(){
         int i = 0;
@@ -90,7 +90,7 @@ public class Dataframe<T> {
      *
      * @param str - name of a column
      * @param f - condition on which filter elements
-     * @return a Map<String, List<T>> with all elements that fulfill the conition
+     * @return a Map<String, List<T>> with all elements that fulfill the condition
      */
     public Map<String, List<T>> query(String str, Predicate<T> f){
         Map<String, List<T>> df = new LinkedHashMap<>();
@@ -124,20 +124,29 @@ public class Dataframe<T> {
         return df;
     }
 
-    /**
-     * Makes the DataFrame object Iterable
-     *
-     * @return the dataframe object iterator
-     */
-    public Iterator<Map.Entry<String, List<T>>> iterator(){
-        return dataframe.entrySet().iterator();
+
+    private int pos = 0;
+
+    @Override
+    public boolean hasNext() {
+        return pos < size();
     }
 
-
-    public String toString(){
-        dataframe.forEach((k, v) -> System.out.println(k + ": " + v));
-        return null;
+    @Override
+    public String next() {
+        if(this.hasNext()) {
+            int i = 0;
+            String str = "";
+            while (i < this.columns() - 1) {
+                str = str + (String) (this.iat(pos, i) + ", ");
+                i++;
+            }
+            str = str + (String) (this.iat(pos, i));
+            pos++;
+            return str;
+        }
+        else{
+            return null;
+        }
     }
-
-
 }

@@ -1,9 +1,9 @@
 package factory;
 
-public class JSONFactory<T> implements  AbstractFileReaderFactory<T>{
+public class JSONFactory implements  AbstractFileReaderFactory{
 
-    public AbstractFileReader<T> fileReader() {
-        return new JSONFileReader<T>();
+    public AbstractFileReader fileReader() {
+        return new JSONFileReader();
     }
 
 }
