@@ -10,17 +10,6 @@ public class Test {
         Dataframe<T> df = new Dataframe(new CSVFactory(), "cities.csv");
 
         //System.out.println(df);
-        Comparator<T> intAscending = (o1, o2) -> {
-            int n = Integer.parseInt((String) o1);
-            int m = Integer.parseInt((String) o2);
-            return Integer.compare(n, m);
-        };
-
-        Comparator<T> intDescending = (o1, o2) -> {
-            int n = Integer.parseInt((String) o1);
-            int m = Integer.parseInt((String) o2);
-            return -(Integer.compare(n, m));
-        };
 
         while (df.hasNext()){
             System.out.println(df.next());
@@ -30,7 +19,7 @@ public class Test {
         //System.out.println(df.iat(2, 8));
         //System.out.println(df.columns());
         //System.out.println(df.size());
-        //System.out.println(df.sort("LonD", intAscending));   // bug, if used it modifies the dataframe object
+        //System.out.println(df.sort("LonD", Comparator.comparingInt(o -> Integer.parseInt((String) o))));   // bug, if used it modifies the dataframe object
 
         //Map<String, List<T>> result = df.query("City", p -> ((String) p).startsWith("U")); // Cities que empiezan por U
         //Map<String, List<T>> result = df.query("LonS", p ->  (Integer.parseInt((String) p) > 50)); // lonD > 80

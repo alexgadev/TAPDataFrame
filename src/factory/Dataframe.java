@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.function.Predicate;
 
+//TODO: Control NullPointerException when a label can't be found
 
 public class Dataframe<T> implements Iterator<String>{
     private Map<String, List<T>> dataframe;
@@ -80,9 +81,15 @@ public class Dataframe<T> implements Iterator<String>{
      * @return the values of a column in the DataFrame following a certain order
      */
     public List<T> sort(String name, Comparator<T> comparator){
-        List<T> list = dataframe.get(name);
-        list.sort(comparator);
-        return list;
+        try {
+            List<T> list = dataframe.get(name);
+            list.sort(comparator);
+            return list;
+        }
+        catch (NullPointerException e){
+            //print sth
+            return null;
+        }
     }
 
     /**
@@ -95,33 +102,38 @@ public class Dataframe<T> implements Iterator<String>{
     public Map<String, List<T>> query(String str, Predicate<T> f){
         Map<String, List<T>> df = new LinkedHashMap<>();
         List<T> values = dataframe.get(str);
-
-        int cont = 0;
-        List<Integer> arr = new ArrayList<>();
-        for (T value : values){
-            if (f.test(value)) {
-                arr.add(cont);
+        try {
+            int cont = 0;
+            List<Integer> arr = new ArrayList<>();
+            for (T value : values) {
+                if (f.test(value)) {
+                    arr.add(cont);
+                }
+                cont++;
             }
-            cont++;
-        }
 
-        for(Map.Entry<String, List<T>> entry : dataframe.entrySet()) {
-            df.putIfAbsent(entry.getKey(), new LinkedList<>());
-            int i = 0; cont = 0;
-            for(T val : entry.getValue()){
-                try {
-                    if (arr.get(i).equals(cont)) {
-                        df.get(entry.getKey()).add(val);
-                        i++;
+            for (Map.Entry<String, List<T>> entry : dataframe.entrySet()) {
+                df.putIfAbsent(entry.getKey(), new LinkedList<>());
+                int i = 0;
+                cont = 0;
+                for (T val : entry.getValue()) {
+                    try {
+                        if (arr.get(i).equals(cont)) {
+                            df.get(entry.getKey()).add(val);
+                            i++;
+                        }
+                        cont++;
+                    } catch (IndexOutOfBoundsException e) {
+                        break;
                     }
-                    cont++;
-                }
-                catch (IndexOutOfBoundsException e){
-                    break;
                 }
             }
+            return df;
         }
-        return df;
+        catch (NullPointerException e){
+            // print sth
+            return null;
+        }
     }
 
 

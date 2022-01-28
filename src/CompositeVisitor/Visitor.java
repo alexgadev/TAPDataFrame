@@ -1,4 +1,4 @@
-package CompositeVisitor;
+package compositevisitor;
 
 public abstract class Visitor {
     public abstract void visit(File file);

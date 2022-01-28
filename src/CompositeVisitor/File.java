@@ -1,4 +1,4 @@
-package CompositeVisitor;
+package compositevisitor;
 
 import factory.Dataframe;
 
