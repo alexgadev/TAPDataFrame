@@ -3,6 +3,9 @@ package compositevisitor;
 import java.util.*;
 import java.util.function.Predicate;
 
+//TODO: Control possible exceptions
+//TODO: add javadoc comments
+
 public class Directory implements ADataframe{
 
     private final String name;
