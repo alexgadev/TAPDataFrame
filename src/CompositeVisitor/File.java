@@ -5,6 +5,8 @@ import factory.Dataframe;
 import java.util.*;
 import java.util.function.Predicate;
 
+//TODO: add javadoc comments
+
 @SuppressWarnings("unchecked")
 public class File<T> implements ADataframe {
     private String name;

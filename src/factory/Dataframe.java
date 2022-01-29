@@ -6,7 +6,7 @@ import java.util.function.Predicate;
 
 //TODO: Control NullPointerException when a label can't be found
 
-public class Dataframe<T> implements Iterator<String>{
+public class Dataframe<T> implements IDataframe<T>, Iterator<String>{
     private Map<String, List<T>> dataframe;
 
     /**
