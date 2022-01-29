@@ -1,2 +1,3 @@
 # Ignore build files
 out/production/DF/*.class
+/bin/
