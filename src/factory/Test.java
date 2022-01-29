@@ -10,10 +10,11 @@ public class Test {
         Dataframe<T> df = new Dataframe(new CSVFactory(), "cities.csv");
 
         //System.out.println(df);
-
-        while (df.hasNext()){
+        System.out.println(df.iat(2, 8));
+        /*while (df.hasNext()){
             System.out.println(df.next());
-        }
+            
+        }*/
 
         //System.out.println(df.at("LonS", 2));
         //System.out.println(df.iat(2, 8));
