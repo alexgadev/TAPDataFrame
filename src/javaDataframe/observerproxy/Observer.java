@@ -1,5 +1,6 @@
 package javaDataframe.observerproxy;
 
 public abstract class Observer {
-    public abstract void update(int newState);
+    public abstract void update(Object[] name);
+    public abstract void getCount();
 }

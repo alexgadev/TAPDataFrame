@@ -1,11 +1,26 @@
 package javaDataframe.observerproxy;
 
-//TODO: Should have a Map<String, Integer> to save method name and times executed and update it depending on the call
+//TODO: add javadoc
+
+import java.util.*;
 
 public class LogObserver extends Observer{
+    private Map<String, Integer> log = new HashMap<>();
 
     @Override
-    public void update(int newState){
-        // do something
+    public void update(Object[] name){
+        if(log.containsKey(name[0].toString())){
+            int n = log.get(name[0].toString());
+            log.replace((String) name[0], ++n);
+        }
+        else{
+            log.put((String) name[0], 1);
+        }
     }
+
+    public void getCount(){
+        log.forEach((k, v) -> System.out.println(k + ": " + v));
+    }
+
+    public Map<String, Integer> getLog(){ return log; }
 }
