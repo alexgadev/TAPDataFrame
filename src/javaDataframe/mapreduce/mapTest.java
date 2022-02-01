@@ -4,6 +4,8 @@ import javaDataframe.factory.CSVFactory;
 import javaDataframe.factory.Dataframe;
 
 import java.io.IOException;
+import java.util.Comparator;
+import java.util.function.Predicate;
 
 public class mapTest {
     public static <T> void main(String[] args) throws IOException {
@@ -24,8 +26,16 @@ public class mapTest {
         mp.addDataframe(df5);
 
 
-        mp.mapQuery("LonS", p ->  (Integer.parseInt((String) p) == 0));
+        // Average of all columns "LonS"
+        mp.mapReduce(new MapSort("LonS", Comparator.comparingInt(o -> Integer.parseInt((String) o))), new Reduce())
+                .values().forEach(x -> x.stream().mapToInt(i -> Integer.parseInt((String) i)).average().ifPresent(avg -> System.out.println("Average found is: " + avg)));
 
-        mp.reduce().forEach((k, v) -> System.out.println(k + ": " + v));
+
+        // All rows where state = "OH" in a group of DataFrames
+        mp.mapReduce(new MapQuery("State", Predicate.isEqual("OH")), new Reduce())
+                .forEach((k, v) -> System.out.println(k + ": " +v));
+
+
+
     }
 }

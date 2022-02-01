@@ -3,9 +3,7 @@ package javaDataframe.mapreduce;
 import javaDataframe.factory.Dataframe;
 
 import java.util.*;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
+
 
 public class MapReduce<T> {
     private List<Dataframe> dataframes;
@@ -24,22 +22,9 @@ public class MapReduce<T> {
         dataframes.remove(df);
     }
 
-    @SuppressWarnings("unchecked")
-    public void mapQuery(String label, Predicate<T> f){
-        dataframes.stream().parallel().forEach(o -> df.add(o.query(label, f)));
-    }
-
-    public Map<String, List<T>> reduce() {
-        Map<String, List<T>> result = new LinkedHashMap<>();
-        for (Map<String, List<T>> map : df){
-            for(Map.Entry<String, List<T>> entry : map.entrySet()){
-                result.putIfAbsent(entry.getKey(), new LinkedList<>());
-                for(T val : entry.getValue()){
-                    result.get(entry.getKey()).add(val);
-                }
-            }
-        }
-        return result;
+    public Map<String, List<T>> mapReduce(Imap func1, Ireduce func2){
+        dataframes.stream().parallel().forEach(d -> func1.map(d, df));
+        return func2.reduce(df);
     }
 
 }
