@@ -50,6 +50,15 @@ public class Dataframe<T> implements IDataframe<T>, Iterator<String>{
     }
 
     /**
+     *
+     * @param label
+     * @return
+     */
+    public List<T> getColumn(String label) {
+        return dataframe.get(label);
+    }
+
+    /**
      * columns: returns the number of columns
      *
      * @return number of labels
