@@ -131,7 +131,7 @@ public class Dataframe<T> implements IDataframe<T>, Iterator<String>{
             return df;
         }
         catch (NullPointerException e){
-            // print sth
+            System.err.println("Couldn't find label: " + str);
             return null;
         }
     }
