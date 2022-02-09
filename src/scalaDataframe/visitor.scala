@@ -10,7 +10,14 @@ abstract class visitor {
 }
 
 class FilterVisitor[T](label: String , f: T => Boolean) extends visitor {
+  var df: Map[String, List[T]] = null
 
+  def elements: Map[String, List[T]] = df
+
+  override def visit[T](file: File[T]): Unit = {
+    //file.getDataframe
+
+  }
 }
 
 class CounterVisitor() extends visitor {
@@ -27,8 +34,5 @@ class CounterVisitor() extends visitor {
 
   override def visit[T](dir: Directory[T]): Unit = {
     dirN = dirN + 1
-    for(child <- dir.getChildren){
-      child.accept(this)
-    }
   }
 }

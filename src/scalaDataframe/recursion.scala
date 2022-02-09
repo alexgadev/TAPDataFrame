@@ -41,12 +41,12 @@ object Run extends scala.App{
   // Round the values of a float-type column that are greater than a value (e.g., 100)
   val num: Float = 100
 
-  def greater = (elem:Float) => elem > num
+  def greater = (elem:Int) => elem > num
 
-  def round = (elem: Float) => elem.round
+  def round = (elem: Int) => elem.round
 
-  println(listFilterMap(greater, round, df.getColumn("LonS")))
-
+  //println(listFilterMap(greater, round, df.getColumn("LonS")))
+  //println(df.getColumn("LonS"))
 
   // Replace a certain word from a string-type column on the elements that contain that word
   val str : String = "NOT A STATE"

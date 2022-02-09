@@ -2,11 +2,14 @@ package scalaDataframe
 
 import javaDataframe.factory.{CSVFactory, Dataframe}
 
-import java.util
 import scala.jdk.CollectionConverters._
 import java.util.Comparator
 import java.util.function.Predicate
+import scala.::
 import scala.collection.mutable.ListBuffer
+import scala.jdk.FunctionConverters.enrichAsJavaToIntFunction
+
+//TODO: handle final sort return in directory "sort"
 
 trait ADataframe[T]{
   def setParent(parent: ADataframe[T]): Unit
@@ -32,23 +35,31 @@ class Directory[T](str: String) extends ADataframe[T] {
   override def setParent(parent: ADataframe[T]): Unit = this.parent = parent
 
   override def sort(name: String, comparator: Comparator[T]): List[T] = {
-    val sorted: List[T] = Nil
+    var sorted: List[T] = Nil
 
-    for(child <- children){
-      sorted::child.sort(name, comparator)
+    implicit def comparatorToOrdering[T](implicit cmp: Comparator[T]): Ordering[T] = new Ordering[T] {
+      def compare(x: T, y: T) = cmp.compare(x, y)
     }
-    sorted
+
+    for (l <- children.map(_.sort(name, comparator))){
+      sorted = (sorted ::: l)
+    }
+    sorted.sorted(comparatorToOrdering(comparator))
   }
 
-  override def query(label: String, p: Predicate[T]): Map[String, util.List[T]] = {
-    val df: Map[String, java.util.List[T]] = null
-    for(child <- children){
-      val nDf: Map[String, java.util.List[T]] = child.query(label, p)
-      for ((k, v) <- nDf){
-        df map(k, v)
+  override def query(label: String, p: Predicate[T]): Map[String, java.util.List[T]] = {
+    val df = scala.collection.mutable.Map[String, java.util.List[T]]()
+    for (mp <- children.map(_.query(label, p))){
+      for((k, v) <- mp){
+        df.get(k) match {
+          case None => df +=  (k -> v)
+          case Some(x:java.util.List[T]) =>
+            val jList: java.util.List[T] = (x.asScala.toList ::: v.asScala.toList).asJava
+            df.update(k, jList)
+        }
       }
     }
-    df
+    df.toMap
   }
 
   override def accept(v: visitor): Unit = {
@@ -79,7 +90,7 @@ object composite extends scala.App {
   val home = new Directory("home")
   val tap = new Directory("tap")
   val f1 = new File("f1", new Dataframe(new CSVFactory(), "cities.csv"))
-  val f2 = new File("f2", new Dataframe(new CSVFactory(), "cities.csv"))
+  val f2 = new File("f2", new Dataframe(new CSVFactory(), "cities2.csv"))
   val f3 = new File("f3", new Dataframe(new CSVFactory(), "cities.csv"))
   val f4 = new File("lp", new Dataframe(new CSVFactory(), "cities.csv"))
 
@@ -96,19 +107,21 @@ object composite extends scala.App {
 
   println("-------------")
 
-  //println(home.sort("LatS", Comparator.comparingInt((o: Any) => o.asInstanceOf[Int])))
+  // Must comment either query or sort so that the results shown will be the correct ones
+  println(home.sort("LonS", Comparator.comparingInt(((o:Any) => o.asInstanceOf[String].toInt).asJavaToIntFunction)))
 
-  //println(root.query("LonS", (p: Any) => p.asInstanceOf[String].toInt > 50).toString())
+  println("Query: " +home.query("LonS", (p: Any) => p.asInstanceOf[String].toInt > 58).toString())
 
   println("-------------")
 
   println("Visitor code:-----filter")
-  val v = new FilterVisitor(condition)
-  root.accept(v)
-  println("Filtered: " + v.elements)
+  //val v = new FilterVisitor(condition)
+  //root.accept(v)
+  //println("Filtered: " + v.elements)
 
   println("Visitor code:-----counter")
   val c = new CounterVisitor()
-  root.accept(c)
+  home.accept(c)
   println("DataFrame files: " + c.files + " DataFrame dirs: " + c.dirs)
+
 }
