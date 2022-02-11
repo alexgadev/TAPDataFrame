@@ -3,19 +3,15 @@ package javaDataframe.compositevisitor;
 import java.util.*;
 import java.util.function.Predicate;
 
-//TODO: Control possible exceptions
-//TODO: add javadoc comments
-
 public class Directory implements ADataframe{
-
     private final String name;
     private List<ADataframe> children;
     private ADataframe parent = null;
 
     /**
+     * Directory constructor
      *
-     *
-     * @param name
+     * @param name name of the directory
      */
     public Directory(String name){
         this.name = name;
@@ -23,9 +19,9 @@ public class Directory implements ADataframe{
     }
 
     /**
+     * Add child under the directory
      *
-     *
-     * @param child
+     * @param child either a file or directory
      */
     public void addChild(ADataframe child){
         children.add(child);
@@ -33,26 +29,25 @@ public class Directory implements ADataframe{
     }
 
     /**
+     * Remove a certain child
      *
-     *
-     * @param child
+     * @param child either a file or directory to be removed
      */
     public void removeChild(ADataframe child){
         children.remove(child);
     }
 
     /**
+     * Get all children under the directory
      *
-     *
-     * @return
+     * @return a list of all children under the directory
      */
     public List<ADataframe> getChildren(){
         return children;
     }
 
     /**
-     *
-     *
+     * Show path names under the directory
      */
     public void ls(){
         System.out.println(name);
@@ -61,21 +56,21 @@ public class Directory implements ADataframe{
     }
 
     /**
+     * Set a Directory as a prent of this directory
      *
-     *
-     * @param parent
+     * @param parent either a directory or null if the directory is the root
      */
     public void setParent(ADataframe parent){
         this.parent = parent;
     }
 
     /**
+     * Sorts a column in all dataframes under the directory
      *
-     *
-     * @param name
-     * @param comparator
-     * @param <T>
-     * @return
+     * @param name String with the column name
+     * @param comparator sorting order
+     * @param <T> generic type parameter
+     * @return a list with all the sorted results of sorting every child
      */
     public <T> List<T> sort(String name, Comparator<T> comparator){
         List<T> sorted = new LinkedList<>();
@@ -87,12 +82,12 @@ public class Directory implements ADataframe{
     }
 
     /**
+     * Queries the rows of all dataframes under the directory
      *
-     *
-     * @param str
-     * @param f
-     * @param <T>
-     * @return
+     * @param str string with the column name
+     * @param f condition (Predicate) that needs to be fulfilled
+     * @param <T> generic type parameter
+     * @return a Map with all the results of querying every child
      */
     public <T> Map<String, List<T>> query(String str, Predicate<T> f){
         Map<String, List<T>> df = new LinkedHashMap<>();
@@ -109,9 +104,9 @@ public class Directory implements ADataframe{
     }
 
     /**
+     * All ADataframes under the directory including the directory
      *
-     *
-     * @return
+     * @return list of ADataframe
      */
     public List<ADataframe> toList(){
         List<ADataframe> result = new LinkedList<>();
@@ -121,6 +116,11 @@ public class Directory implements ADataframe{
         return result;
     }
 
+    /**
+     * Accept a visitor to the directory
+     *
+     * @param v visitor
+     */
     public void accept(Visitor v){
         v.visit(this);
     }

@@ -1,12 +1,15 @@
 package javaDataframe.observerproxy;
 
-//TODO: add javadoc
-
 import java.util.*;
 
 public class LogObserver extends Observer{
-    private Map<String, Integer> log = new HashMap<>();
+    private Map<String, Integer> log = new LinkedHashMap<>();
 
+    /**
+     * Increase number of usages of an operation
+     *
+     * @param name array with name of function used
+     */
     @Override
     public void update(Object[] name){
         if(log.containsKey(name[0].toString())){
@@ -18,6 +21,9 @@ public class LogObserver extends Observer{
         }
     }
 
+    /**
+     * Show number of times an operation has been used
+     */
     public void getCount(){
         log.forEach((k, v) -> System.out.println(k + ": " + v));
     }

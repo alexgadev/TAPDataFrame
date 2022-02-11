@@ -1,7 +1,8 @@
 package javaDataframe.compositevisitor;
 
-//TODO: Control unchecked cast exceptions and forbidden executions of each operation
-
+/**
+ * Abstract visitor class
+ */
 public abstract class Visitor {
     public abstract void visit(File file);
     public void visit(Directory dir){

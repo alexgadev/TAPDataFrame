@@ -13,6 +13,13 @@ public class MapSort implements Imap{
         this.comp = comp;
     }
 
+    /**
+     * Map a sort operation
+     *
+     * @param df a dataframe object
+     * @param list a list to save the result
+     * @param <T> generic typ parameter
+     */
     @Override
     @SuppressWarnings("unchecked")
     public <T> void map(Dataframe df, List<Map<String, List<T>>> list) {

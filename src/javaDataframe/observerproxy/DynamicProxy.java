@@ -2,9 +2,6 @@ package javaDataframe.observerproxy;
 
 import java.lang.reflect.*;
 
-
-//TODO: add javadoc
-
 public class DynamicProxy implements InvocationHandler {
     private Object target = null;
     private ObserverMonitor monitor;

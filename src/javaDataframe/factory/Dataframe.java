@@ -3,6 +3,7 @@ package javaDataframe.factory;
 import java.io.IOException;
 import java.util.*;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 //TODO: Control NullPointerException when a label can't be found
 
@@ -110,7 +111,12 @@ public class Dataframe<T> implements IDataframe<T>, Iterator<String>{
      */
     public Map<String, List<T>> query(String str, Predicate<T> f){
         Map<String, List<T>> df = new LinkedHashMap<>();
-        List<T> values = dataframe.get(str);
+        df = dataframe.entrySet()
+                .stream()
+                .filter(e -> e.getKey().equalsIgnoreCase(str))
+                .filter(e -> e.getValue().stream().filter(f)
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
+        /*List<T> values = dataframe.get(str);
         try {
             int cont = 0;
             List<Integer> arr = new ArrayList<>();
@@ -143,6 +149,9 @@ public class Dataframe<T> implements IDataframe<T>, Iterator<String>{
             System.err.println("Couldn't find label: " + str);
             return null;
         }
+
+         */
+        return df;
     }
 
 

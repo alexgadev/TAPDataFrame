@@ -1,7 +1,5 @@
 package javaDataframe.observerproxy;
 
-//TODO: add javadoc
-
 import java.util.function.Predicate;
 
 public class QueryObserver<T> extends Observer {
@@ -14,6 +12,11 @@ public class QueryObserver<T> extends Observer {
         this.function = function;
     }
 
+    /**
+     * Increase the number of queries with a determined predicate exectued
+     *
+     * @param args array with name of function and parameters with which it has been executed
+     */
     @Override
     public void update(Object[] args) {
         try {
@@ -24,7 +27,17 @@ public class QueryObserver<T> extends Observer {
         catch(ArrayIndexOutOfBoundsException ignored){}
     }
 
+    /**
+     * Show number of times the determined query has been executed
+     */
     public void getCount(){
         System.out.println("Queries with specified predicate executed: " + queries);
     }
+
+    /**
+     * Gets total times the query has been executed
+     *
+     * @return the number of times a determined query has been executed
+     */
+    public int getTotal(){ return queries;}
 }
